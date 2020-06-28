@@ -30,3 +30,17 @@ functions:
           path: hello
           method: get
           cors: true
+  geoIp:
+    handler: handler.geoIp
+    events:
+      - http:
+          path: geo-ip/{ipAddress}
+          method: get
+          cors: true
+  whoIs:
+    handler: handler.whoIs
+    events:
+      - http:
+          path: who-is/{ipAddress}
+          method: get
+          cors: true
