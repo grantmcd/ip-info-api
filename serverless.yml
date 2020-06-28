@@ -1,4 +1,3 @@
-# NOTE: update this with your service name
 service: ip-info-api
 
 # Create an optimized package for our functions 
@@ -30,3 +29,4 @@ functions:
       - http:
           path: hello
           method: get
+          cors: true
