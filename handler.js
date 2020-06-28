@@ -1,5 +1,3 @@
-const maxmind = require('maxmind');
-
 const CorsHeaders = {
   "Access-Control-Allow-Origin": "*", // (* or a specific host)
   "Access-Control-Allow-Credentials": true // Required for cookies, authorization headers with HTTPS
@@ -22,23 +20,26 @@ const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
 );
 
 export const geoIp = async (event, context) => {
-
+  const maxmind = require('maxmind');
   const lookup = await maxmind.open('./data/GeoLite2-City.mmdb');
+
   const geoIpInfo = lookup.get(event.pathParameters.ipAddress);
 
   return {
     statusCode: 200,
     headers: CorsHeaders,
-    body: geoIpInfo
+    body: JSON.stringify(geoIpInfo)
   };
 };
 
 export const whoIs = async (event, context) => {
+  const whoiser = require('whoiser');
+
+  let whoisInfo = await whoiser(event.pathParameters.ipAddress);
+
   return {
     statusCode: 200,
     headers: CorsHeaders,
-    body: JSON.stringify({
-      message: `Go WhoIs Serverless v1.0! ${(await message({ time: 1, copy: 'Your function executed successfully!' }))}`
-    })
+    body: JSON.stringify(whoisInfo)
   };
 };

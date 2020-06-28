@@ -9,6 +9,12 @@ plugins:
   - serverless-offline
   - serverless-dotenv-plugin # Load .env as environment variables
 
+custom:
+  bundle:
+    copyFiles:
+      - from: 'data/*'
+        to: '.'
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -41,6 +47,6 @@ functions:
     handler: handler.whoIs
     events:
       - http:
-          path: who-is/{ipAddress}
+          path: whois-ip/{ipAddress}
           method: get
           cors: true
