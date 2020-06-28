@@ -12,5 +12,7 @@
     "serverless-dotenv-plugin": "^2.4.2",
     "serverless-offline": "^5.12.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "maxmind": "^4.1.3"
+  }
 }
