@@ -1,142 +1,185 @@
 # ip-info-api
 
-A Serverless starter that adds ES7 syntax, serverless-offline, linting, environment variables, and unit test support. Part of the [Serverless Stack](http://serverless-stack.com) guide.
+This project was built with the serverless framework. It currently deploys the functions to AWS Lambda. 
 
-[Serverless Node.js Starter](https://github.com/AnomalyInnovations/serverless-nodejs-starter) uses the [serverless-bundle](https://github.com/AnomalyInnovations/serverless-bundle) plugin (an extension of the [serverless-webpack](https://github.com/serverless-heaven/serverless-webpack) plugin) and the [serverless-offline](https://github.com/dherault/serverless-offline) plugin. It supports:
+The corresponding react UI for this project can be seen [here](https://github.com/grantmcd/ip-info-ui).
 
-- **Generating optimized Lambda packages with Webpack**
-- **Use ES7 syntax in your handler functions**
-  - Use `import` and `export`
-- **Run API Gateway locally**
-  - Use `serverless offline start`
-- **Support for unit tests**
-  - Run `npm test` to run your tests
-- **Sourcemaps for proper error messages**
-  - Error message show the correct line numbers
-  - Works in production with CloudWatch
-- **Lint your code with ESLint**
-- **Add environment variables for your stages**
-- **No need to manage Webpack or Babel configs**
+## geoIp
 
----
+Returns JSON with various pieces of data about the IP address from the maxmind geolite DB.
 
-### Demo
+```
+GET /geo-ip/{ipAddress}
+```
+Example Response:
 
-A demo version of this service is hosted on AWS - [`https://z6pv80ao4l.execute-api.us-east-1.amazonaws.com/dev/hello`](https://z6pv80ao4l.execute-api.us-east-1.amazonaws.com/dev/hello)
-
-And here is the ES7 source behind it
-
-``` javascript
-export const hello = async (event, context) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: `Go Serverless v1.0! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
-      input: event,
-    }),
-  };
-};
-
-const message = ({ time, ...rest }) => new Promise((resolve, reject) =>
-  setTimeout(() => {
-    resolve(`${rest.copy} (with a delay)`);
-  }, time * 1000)
-);
+```JSON
+{
+    "city": {
+        "geoname_id": 4279247,
+        "names": {
+            "en": "Shawnee",
+            "ru": "Шони"
+        }
+    },
+    "continent": {
+        "code": "NA",
+        "geoname_id": 6255149,
+        "names": {
+            "de": "Nordamerika",
+            "en": "North America",
+            "es": "Norteamérica",
+            "fr": "Amérique du Nord",
+            "ja": "北アメリカ",
+            "pt-BR": "América do Norte",
+            "ru": "Северная Америка",
+            "zh-CN": "北美洲"
+        }
+    },
+    "country": {
+        "geoname_id": 6252001,
+        "iso_code": "US",
+        "names": {
+            "de": "USA",
+            "en": "United States",
+            "es": "Estados Unidos",
+            "fr": "États-Unis",
+            "ja": "アメリカ合衆国",
+            "pt-BR": "Estados Unidos",
+            "ru": "США",
+            "zh-CN": "美国"
+        }
+    },
+    "location": {
+        "accuracy_radius": 20,
+        "latitude": 39.0452,
+        "longitude": -94.7189,
+        "metro_code": 616,
+        "time_zone": "America/Chicago"
+    },
+    "postal": {
+        "code": "66226"
+    },
+    "registered_country": {
+        "geoname_id": 6252001,
+        "iso_code": "US",
+        "names": {
+            "de": "USA",
+            "en": "United States",
+            "es": "Estados Unidos",
+            "fr": "États-Unis",
+            "ja": "アメリカ合衆国",
+            "pt-BR": "Estados Unidos",
+            "ru": "США",
+            "zh-CN": "美国"
+        }
+    },
+    "subdivisions": [
+        {
+            "geoname_id": 4273857,
+            "iso_code": "KS",
+            "names": {
+                "en": "Kansas",
+                "es": "Kansas",
+                "fr": "Kansas",
+                "ja": "カンザス州",
+                "pt-BR": "Cansas",
+                "ru": "Канзас"
+            }
+        }
+    ]
+}
 ```
 
-### Upgrading from v1.x
+## whoisIp
 
-We have detailed instructions on how to upgrade your app to the v2.0 of the starter if you were using v1.x before. [Read about it here](https://github.com/AnomalyInnovations/serverless-nodejs-starter/releases/tag/v2.0).
+Returns JSON with various pieces of data about the IP address from a whois lookup. Uses [whoiser](https://github.com/LayeredStudio/whoiser) for api requests.
 
-### Requirements
-
-- [Install the Serverless Framework](https://serverless.com/framework/docs/providers/aws/guide/installation/)
-- [Configure your AWS CLI](https://serverless.com/framework/docs/providers/aws/guide/credentials/)
-
-### Installation
-
-To create a new Serverless project.
-
-``` bash
-$ serverless install --url https://github.com/AnomalyInnovations/serverless-nodejs-starter --name my-project
+```
+GET /whois-ip/{ipAddress}
 ```
 
-Enter the new directory
-
-``` bash
-$ cd my-project
+Example Response
+```JSON
+{
+    "range": "75.23.0.0 - 75.45.127.255",
+    "route": "75.44.0.0/16, 75.24.0.0/13, 75.32.0.0/13, 75.23.0.0/16, 75.45.0.0/17, 75.40.0.0/14",
+    "NetName": "SBCIS-SBIS-6BLK",
+    "NetHandle": "NET-75-23-0-0-1",
+    "Parent": "NET75 (NET-75-0-0-0-0)",
+    "NetType": "Direct Allocation",
+    "asn": "",
+    "Organization": "AT&T Corp. (AC-3280)",
+    "RegDate": "2006-02-28",
+    "Updated": "2018-07-19",
+    "Ref": "https://rdap.arin.net/registry/ip/75.23.0.0",
+    "organisation": {
+        "OrgName": "AT&T Corp.",
+        "OrgId": "AC-3280",
+        "Address": "16331 NE 72nd Way\nAttn: IP Management",
+        "City": "Redmond",
+        "StateProv": "WA",
+        "PostalCode": "98052",
+        "Country": "US",
+        "RegDate": "2018-03-05",
+        "Updated": "2020-02-11",
+        "Comment": "For policy abuse issues contact abuse@att.net\nFor all subpoena, Internet, court order related matters and emergency requests contact\n11760 US Highway 1\nNorth Palm Beach, FL 33408\nMain Number: 800-635-6840\nFax: 888-938-4715",
+        "Ref": "https://rdap.arin.net/registry/entity/AC-3280"
+    },
+    "contactAbuse": {
+        "OrgAbuseHandle": "ABUSE7-ARIN",
+        "OrgAbuseName": "abuse",
+        "OrgAbusePhone": "+1-919-319-8167",
+        "OrgAbuseEmail": "abuse@att.net",
+        "OrgAbuseRef": "https://rdap.arin.net/registry/entity/ABUSE7-ARIN"
+    },
+    "contactTechnical": {
+        "OrgTechHandle": "ZS44-ARIN",
+        "OrgTechName": "IPAdmin-ATT Internet Services",
+        "OrgTechPhone": "+1-888-510-5545",
+        "OrgTechEmail": "ipadmin@att.com",
+        "OrgTechRef": "https://rdap.arin.net/registry/entity/ZS44-ARIN"
+    },
+    "text": [
+        "#",
+        "# ARIN WHOIS data and services are subject to the Terms of Use",
+        "# available at: https://www.arin.net/resources/registry/whois/tou/",
+        "#",
+        "# If you see inaccuracies in the results, please report at",
+        "# https://www.arin.net/resources/registry/whois/inaccuracy_reporting/",
+        "#",
+        "# Copyright 1997-2020, American Registry for Internet Numbers, Ltd.",
+        "#",
+        "#",
+        "# ARIN WHOIS data and services are subject to the Terms of Use",
+        "# available at: https://www.arin.net/resources/registry/whois/tou/",
+        "#",
+        "# If you see inaccuracies in the results, please report at",
+        "# https://www.arin.net/resources/registry/whois/inaccuracy_reporting/",
+        "#",
+        "# Copyright 1997-2020, American Registry for Internet Numbers, Ltd.",
+        "#"
+    ]
+}
 ```
 
-Install the Node.js packages
+## CI
 
-``` bash
-$ npm install
-```
+This project uses Github Action Workflows to automatically run tests on pushes to develop and PRs to master.
 
-### Usage
+Pushes to master trigger a Serverless 
+deploy to AWS Lambda.
 
-To run a function on your local
+The secrets needed for deployments are stored as Github repo secrets.
 
-``` bash
-$ serverless invoke local --function hello
-```
+This project is also set up with Dependabot to allow automated dependency update PRs.
 
-To simulate API Gateway locally using [serverless-offline](https://github.com/dherault/serverless-offline)
+## Future Improvements
 
-``` bash
-$ serverless offline start
-```
+If I continued to work on this here's a short list of some things I'd want to add:
 
-Deploy your project
-
-``` bash
-$ serverless deploy
-```
-
-Deploy a single function
-
-``` bash
-$ serverless deploy function --function hello
-```
-
-#### Running Tests
-
-Run your tests using
-
-``` bash
-$ npm test
-```
-
-We use Jest to run our tests. You can read more about setting up your tests [here](https://facebook.github.io/jest/docs/en/getting-started.html#content).
-
-#### Environment Variables
-
-To add environment variables to your project
-
-1. Rename `env.example` to `.env`.
-2. Add environment variables for your local stage to `.env`.
-3. Uncomment `environment:` block in the `serverless.yml` and reference the environment variable as `${env:MY_ENV_VAR}`. Where `MY_ENV_VAR` is added to your `.env` file.
-4. Make sure to not commit your `.env`.
-
-#### Linting
-
-We use [ESLint](https://eslint.org) to lint your code via the [serverless-bundle](https://github.com/AnomalyInnovations/serverless-bundle) plugin.
-
-You can turn this off by adding the following to your `serverless.yml`.
-
-``` yaml
-custom:
-  bundle:
-    linting: false
-```
-
-To [override the default config](https://eslint.org/docs/user-guide/configuring), add a `.eslintrc.json` file. To ignore ESLint for specific files, add it to a `.eslintignore` file.
-
-### Support
-
-- Open a [new issue](https://github.com/AnomalyInnovations/serverless-nodejs-starter/issues/new) if you've found a bug or have some suggestions.
-- Or submit a pull request!
-
----
-
-This repo is maintained by [Anomaly Innovations](https://anoma.ly); makers of [Seed](https://seed.run) and [Serverless Stack](https://serverless-stack.com).
+* Param validation on the functions
+* Restrict client access to the lambda functions using a JWT authorizer 
+* Custom domain on the API Gateway
+* Make tests less brittle. 
+  * whoisIp currently makes a whois request during the text. Mocking this response would be good
