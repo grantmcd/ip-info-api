@@ -13,6 +13,6 @@
   },
   "dependencies": {
     "maxmind": "^4.1.3",
-    "whoiser": "^1.7.3"
+    "whoiser": "^1.9.1"
   }
 }
