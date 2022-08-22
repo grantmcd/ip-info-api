@@ -9,7 +9,7 @@
     "aws-sdk": "^2.706.0",
     "serverless-bundle": "^1.8.0",
     "serverless-dotenv-plugin": "^2.4.2",
-    "serverless-offline": "^6.4.0"
+    "serverless-offline": "^9.2.6"
   },
   "dependencies": {
     "maxmind": "^4.1.3",
